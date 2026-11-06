@@ -1,0 +1,14 @@
+name: CI
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: install dependencies
+        run: sudo apt update
+          sudo apt install -y nlohmann-json3-dev libyaml-cpp-dev
+
+      - name: build project
+        run: cd src
+            g++ converter.cpp main.cpp -o main -lyaml-cpp
