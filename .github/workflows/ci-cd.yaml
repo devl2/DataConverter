@@ -28,11 +28,11 @@ jobs:
           sudo apt install -y nlohmann-json3-dev libyaml-cpp-dev
 
       - name: configure project
-        run: mkdir build & cd build
+        run: mkdir build && cd build
           cmake -S . -B build
           
       - name: build project
         run: cmake --build build
 
       - name: run automatic tests
-        run: 
+        run: ctest --test-dir build
