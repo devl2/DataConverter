@@ -12,6 +12,9 @@ jobs:
       fail-fast: true
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest] 
+    env:
+      SCCACHE_DIR: ${{ runner.temp }}/sccache
+      SCCACHE_GHA_ENABLED: "false"
         
     runs-on: ${{matrix.os}} 
     
@@ -24,6 +27,17 @@ jobs:
       
       - name: check cmake
         run: cmake --version
+
+      - name: Setup sccache
+        uses: mozilla-actions/sccache-action@v0.0.11
+      
+      - name: Cache compilation
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/sccache
+          key: ${{ runner.os }}-cpp17-${{ hashFiles('**/CMakeLists.txt', '**/vcpkg.json') }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-cpp17-${{ hashFiles('**/CMakeLists.txt', '**/vcpkg.json') }}-
       
       - name: install dependencies (Ubuntu)
         if: matrix.os == 'ubuntu-latest'
@@ -39,10 +53,13 @@ jobs:
         shell: pwsh
 
       - name: configure project
-        run: cmake -S . -B build
+        run: cmake -S . -B build -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
           
       - name: build project
         run: cmake --build build
 
       - name: run automatic tests
         run: ctest --test-dir build
+
+      - name: show cache statistics
+        run: sccache --show-stats
