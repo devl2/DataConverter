@@ -13,7 +13,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest] 
     env:
-      SCCACHE_DIR: ${{ runner.temp }}/sccache
+      SCCACHE_DIR: ${{ github.workspace }}/.sccache
       SCCACHE_GHA_ENABLED: "false"
         
     runs-on: ${{matrix.os}} 
@@ -34,7 +34,7 @@ jobs:
       - name: Cache compilation
         uses: actions/cache@v4
         with:
-          path: ${{ runner.temp }}/sccache
+          path: ${{ github.workspace }}/.sccache
           key: ${{ runner.os }}-cpp17-${{ hashFiles('**/CMakeLists.txt', '**/vcpkg.json') }}-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-cpp17-${{ hashFiles('**/CMakeLists.txt', '**/vcpkg.json') }}-
