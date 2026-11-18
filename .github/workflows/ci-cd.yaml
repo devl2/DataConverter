@@ -42,7 +42,7 @@ jobs:
         run: cmake -S . -B build
           
       - name: build project
-        run: cmake --build build --no-tests=error
+        run: cmake --build build
 
       - name: run automatic tests
         run: ctest --test-dir build
