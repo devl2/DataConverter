@@ -73,7 +73,10 @@ jobs:
         
   deploy:
     needs: build
-    runs-on: ${{matrix.os}} 
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Download build artifact
         uses: actions/download-artifact@v4
