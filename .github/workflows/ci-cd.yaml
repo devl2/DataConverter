@@ -71,8 +71,7 @@ jobs:
       - name: show cache statistics
         run: sccache --show-stats
         
- 
- deploy:
+  deploy:
     needs: build
     runs-on: ${{matrix.os}} 
     steps:
